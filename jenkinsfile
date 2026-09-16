@@ -9,7 +9,6 @@ tools {
 }
 
 stages {
-
     stage('Checkout') {
         steps {
             git 'https://github.com/abhisheksolanke97/student-management.git'
