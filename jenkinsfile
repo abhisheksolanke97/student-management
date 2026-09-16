@@ -12,7 +12,7 @@ stages {
 
     stage('Checkout') {
         steps {
-            git 'https://github.com/mayurpandit25/student-management.git'
+            git 'https://github.com/abhisheksolanke97/student-management.git'
             echo 'Cloning is successful'
         }
     }
