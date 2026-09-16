@@ -1,6 +1,7 @@
+```groovy
 pipeline {
     agent {
-        label "worker"
+        label 'worker'
     }
 
     tools {
@@ -9,30 +10,28 @@ pipeline {
 
     stages {
 
-        stage('checkout') {
+        stage('Checkout') {
             steps {
                 git 'https://github.com/mayurpandit25/student-management.git'
-                echo "Clonning is successful"
+                echo 'Cloning is successful'
             }
         }
 
         stage('Build') {
             steps {
-                sh '''
-                  mvn clean package
-                '''
+                sh 'mvn clean package'
             }
         }
 
         stage('Test') {
             steps {
-                echo "Testing is successful"
+                echo 'Testing is successful'
             }
         }
 
         stage('Deploy') {
             steps {
-                echo "Deployment is successful"
+                echo 'Deployment is successful'
             }
         }
     }
