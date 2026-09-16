@@ -1,38 +1,40 @@
-```groovy
 pipeline {
-    agent {
-        label 'worker'
-    }
+agent {
+label 'worker'
+}
 
-    tools {
-        maven 'mvn'
-    }
+```
+tools {
+    maven 'mvn'
+}
 
-    stages {
+stages {
 
-        stage('Checkout') {
-            steps {
-                git 'https://github.com/mayurpandit25/student-management.git'
-                echo 'Cloning is successful'
-            }
-        }
-
-        stage('Build') {
-            steps {
-                sh 'mvn clean package'
-            }
-        }
-
-        stage('Test') {
-            steps {
-                echo 'Testing is successful'
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                echo 'Deployment is successful'
-            }
+    stage('Checkout') {
+        steps {
+            git 'https://github.com/mayurpandit25/student-management.git'
+            echo 'Cloning is successful'
         }
     }
+
+    stage('Build') {
+        steps {
+            sh 'mvn clean package'
+        }
+    }
+
+    stage('Test') {
+        steps {
+            sh 'mvn test'
+        }
+    }
+
+    stage('Deploy') {
+        steps {
+            echo 'Deployment is successful'
+        }
+    }
+}
+```
+
 }
