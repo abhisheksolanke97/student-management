@@ -1,39 +1,12 @@
 pipeline {
-agent {
-label 'worker'
-}
-
-```
-tools {
-    maven 'mvn'
-}
-
-stages {
-    stage('Checkout') {
-        steps {
+    agent {
+        label "worker"
+    }
+    
+    stage('checkout'){
+        steps{
             git 'https://github.com/abhisheksolanke97/student-management.git'
-            echo 'Cloning is successful'
+            echo "Clonning is Successful"
         }
     }
-
-    stage('Build') {
-        steps {
-            sh 'mvn clean package'
-        }
-    }
-
-    stage('Test') {
-        steps {
-            echo 'Testing is successful'
-        }
-    }
-
-    stage('Deploy') {
-        steps {
-            echo 'Deployment is successful'
-        }
-    }
-}
-```
-
 }
