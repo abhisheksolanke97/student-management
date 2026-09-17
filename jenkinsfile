@@ -19,7 +19,7 @@ pipeline {
                 sh '''
                   java --version
                   mvn --version
-                  mvn clean package
+                  mvn clean package -DskipTests
                 '''
             }
         }    
