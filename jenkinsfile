@@ -2,11 +2,15 @@ pipeline {
     agent {
         label "worker"
     }
-    
-    stage('checkout'){
-        steps{
-            git 'https://github.com/abhisheksolanke97/student-management.git'
-            echo "Clonning is Successful"
+
+    stages{
+
+        stage('Checkout'){
+            steps{
+                git "https://github.com/abhisheksolanke97/student-management.git"
+                echo "Clonning is Successful"
+            }
+
         }
     }
 }
