@@ -2,25 +2,12 @@ pipeline {
     agent {
         label "worker"
     }
-
-    tools {
-        maven 'mvn'
-    }
-
     stages{
 
         stage('checkout'){
             steps{
                 git "https://github.com/abhisheksolanke97/student-management.git"
                 echo "Clonning is Successful"
-            }
-        }
-
-        stage('Build') {
-            steps {
-                sh '''
-                  mvn clean package 
-                '''  
             }
         }
     }
