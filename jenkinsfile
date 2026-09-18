@@ -37,6 +37,14 @@ pipeline {
             steps {
                 sh 'aws s3 cp target/*.war s3://abhishek54321.space/Artifacts/student-management.war'
             }
-        }    
+        } 
+
+        stage('SonarQube Analysis'){
+            steps {
+                withSonarQubeEnv('sonar'){
+                    sh 'mvn sonar:sonar'
+                }
+            }
+        }   
     }
 }
