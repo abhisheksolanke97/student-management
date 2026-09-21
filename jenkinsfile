@@ -52,5 +52,14 @@ pipeline {
                 }
             }
         }  
+
+        stage('Docker Build') {
+            steps {
+                sh '''
+                docker build --no-cashe -t student-management:v1 .
+                docker images
+                '''
+            }
+        }
     }
 }
