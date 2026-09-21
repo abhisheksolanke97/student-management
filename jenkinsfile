@@ -61,5 +61,30 @@ pipeline {
                 '''
             }
         }
+
+        
+        stage('push image to ECR') {
+            steps {
+                sh '''
+                aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 942049393829.dkr.ecr.us-east-2.amazonaws.com
+                docker tag studentapp:v1 942049393829.dkr.ecr.us-east-2.amazonaws.com/studentapp:latest
+                docker push 942049393829.dkr.ecr.us-east-2.amazonaws.com/studentapp:latest
+                '''
+            }
+        }
+
+        stage('Deploy to EKS') {
+            steps {
+                sh '''
+                aws eks update-kubeconfig --region us-east-2 --name my-cluster-mayur
+                sudo snap install kubectl --classic
+                kubectl apply -f k8s/
+                kubectl get pods 
+                sleep 10
+                kubectl get pods
+                kubectl get svc -o wide
+                '''
+            }
+        }
     }
 }
