@@ -57,8 +57,33 @@ pipeline {
         stage('Docker Build') {
             steps {
                 sh '''
-                docker build --no-cashe -t student-management:v1 .
+                docker build --no-cache -t studentapp:v1 .
                 docker images
+                '''
+            }
+        }
+
+        
+        stage('push image to ECR') {
+            steps {
+                sh '''
+                aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 199731093942.dkr.ecr.ap-south-1.amazonaws.com/studentapp
+                docker tag studentapp:v1 942049393829.dkr.ecr.us-east-2.amazonaws.com/studentapp:latest
+                docker push 942049393829.dkr.ecr.us-east-2.amazonaws.com/studentapp:latest
+                '''
+            }
+        }
+
+        stage('Deploy to EKS') {
+            steps {
+                sh '''
+                aws eks update-kubeconfig --region ap-south-1 --name my-cluster-mayur
+                sudo snap install kubectl --classic
+                kubectl apply -f k8s/
+                kubectl get pods 
+                sleep 10
+                kubectl get pods
+                kubectl get svc -o wide
                 '''
             }
         }
