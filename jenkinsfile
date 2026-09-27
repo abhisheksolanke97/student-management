@@ -101,7 +101,7 @@ pipeline {
 
 pipeline {
     agent {
-        labels 'worker'
+        label 'worker'
     }
 
     tools {
@@ -129,7 +129,7 @@ pipeline {
         }
         post {
             success {
-                archiverArtifacts artifacts: '**/target/*.war',fingerprint: true
+                archiveArtifacts artifacts: '**/target/*.war',fingerprint: true
             }
         }
     }
