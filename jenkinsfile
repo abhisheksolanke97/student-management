@@ -114,9 +114,11 @@ pipeline {
 
     stages{
 
-        stage{
-            git "https://github.com/abhisheksolanke97/student-management.git"
-            echo "Clonning is Successful"
+        stage('checkout'){
+            stage{
+                git "https://github.com/abhisheksolanke97/student-management.git"
+                echo "Clonning is Successful"
+            }   
         }
     }
     stage('Bulid') {
