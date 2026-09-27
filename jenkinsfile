@@ -1,3 +1,4 @@
+'''
 pipeline {
     agent {
         label 'worker'
@@ -59,6 +60,49 @@ pipeline {
                 docker build --no-cashe -t student-management:v1 .
                 docker images
                 '''
+            }
+        }
+    }
+}
+'''
+
+
+
+
+
+
+
+
+
+pipeline {
+    agent {
+        labels 'worker'
+    }
+
+    tools {
+        maven 'maven'
+    }
+
+    environment {
+        my_aws_cred = credentials('aws-cred')
+    }
+
+    stages{
+
+        stage{
+            git "https://github.com/abhisheksolanke97/student-management.git"
+            echo "Clonning is Successful"
+        }
+    }
+    stage('Bulid') {
+        steps {
+            sh ''' 
+             mvn clean package
+             '''
+        }
+        post {
+            success {
+                archiverArtifacts artifacts: '**/target/*.war',fingerprint: true
             }
         }
     }
