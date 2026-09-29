@@ -61,4 +61,5 @@ jobs:
 
       - name: Scan Image Using Trivy 
         run: trivy image --scanners vuln --severity HIGH,CRITICAL --exit-code 0 student:latest
+
       
