@@ -19,3 +19,6 @@ jobs:
           distribution: temurin
           java-version: "21"
           cache: maven
+
+      - name: Buld Stage
+        run: mvn clean package
