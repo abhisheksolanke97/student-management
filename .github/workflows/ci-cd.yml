@@ -39,8 +39,8 @@ jobs:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         run: |
           mnv sonar:sonar \
-            -Dsoanr.token="$SONAR_TOKEN" \
-            -Dsoanr.host.url="$SONAR_HOST_URL"
+            -Dsonar.token="$SONAR_TOKEN" \
+            -Dsonar.host.url="$SONAR_HOST_URL"
 
       - name: SonarQube Quality Gates
         run: |
