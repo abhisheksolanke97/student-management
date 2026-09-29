@@ -82,7 +82,7 @@ jobs:
           version: latest
 
       - name: Terraform init
-        run: terraform apply -auto-approve 
+        run: terraform init
 
       - name: Terraform validate 
         run: terraform validate
