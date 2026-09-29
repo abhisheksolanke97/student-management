@@ -38,7 +38,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         run: |
-          mnv sonar:sonar \
+          mvn sonar:sonar \
             -Dsonar.token="$SONAR_TOKEN" \
             -Dsonar.host.url="$SONAR_HOST_URL"
 
