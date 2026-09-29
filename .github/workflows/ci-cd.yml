@@ -91,7 +91,7 @@ jobs:
         run: terraform apply -auto-approve
 
       - name: kubectl install
-        run: azure/setup-kubectl@v4
+        uses: azure/setup-kubectl@v4
 
       - name: Deployment on Kubernetes
         run: |
