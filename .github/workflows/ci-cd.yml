@@ -29,4 +29,36 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-south-1
-          
+
+      - name: Push Artifacts to s3
+        run: aws s3 cp target/*.war s3://abhishek54321.space/Artifacts/student.war
+
+      - name: SonarQube Analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        run: |
+          mnv sonar:soanr \
+            -Dsoanr.token="$SONAR_TOKEN" \
+            -Dsoanr.host.url="$SONAR_HOST_URL"
+
+      - name: SonarQube Quality Gates
+        run: |
+          docker build -t student .
+          docker images
+
+      - name: Trivy Install 
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget 
+          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | \
+            gpg --dearmor | \
+            sudo tee /usr/share/keyrings/trivy.gpg > /dev/null
+          echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | \
+            sudo tee /etc/apt/sources.list.d/trivy.list
+          sudo apt-get update
+          sudo apt-get install -y trivy
+
+      - name: Scan Image Using Trivy 
+        run: trivy image --scanners vuln --severity HIGH,CRITICAL --exit-code 0 student:latest
+      
