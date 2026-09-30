@@ -40,7 +40,7 @@ jobs:
         run: |
           mvn sonar:sonar \
             -Dsonar.token="$SOANR_TOKEN" \
-            -Dsoanr.host.url="$SOANR_HOST_URL"
+            -Dsonar.host.url="$SOANR_HOST_URL"
 
       - name: SonarQube Quality Gates
         run: |
