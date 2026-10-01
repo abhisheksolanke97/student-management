@@ -1,0 +1,34 @@
+pipeline {
+    agent{
+        label 'worker'
+    }
+
+    environment {
+        my-aws_cred = credentials('aws-cred')
+    }
+
+    tools {
+        terraform 'tf'
+    }
+
+    steges {
+
+        stage('Checkout') {
+            steps{
+                sh 'terraform init'
+            }
+        }
+
+        stage('Terraform init') {
+            steps {
+                sh 'terraform init'
+            }
+        }
+
+        stage('Terraform - validate') {
+            steps {
+                sh 'terraform apply -auto-approve'
+            }
+        }
+    }
+}
