@@ -14,9 +14,9 @@ pipeline {
     stages {
 
         stage('Checkout') {
-            steps{
+            steps {
                 git 'https://github.com/abhisheksolanke97/student-management.git'
-                echo "Clonning is Successful"
+                echo "Cloning is Successful"
             }
         }
 
@@ -26,6 +26,7 @@ pipeline {
                     mvn clean package
                 '''
             }
+
             post {
                 success {
                     archiveArtifacts artifacts: '**/target/*.war', fingerprint: true
@@ -33,9 +34,11 @@ pipeline {
             }
         }
 
-        stage('Artifacts to s3'){
+        stage('Artifacts to s3') {
             steps {
-                sh 'aws s3 cp target/student-management.war s3://abhishek54321.space/Artifacts/student.war'
+                sh '''
+                    aws s3 cp target/student-management.war s3://abhishek54321.space/Artifacts/student.war
+                '''
             }
         }
 
@@ -49,7 +52,7 @@ pipeline {
 
         stage('Quality Gate') {
             steps {
-                timeout(time: 1, unit: 'MINUTES'){
+                timeout(time: 1, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
                 }
             }
@@ -65,30 +68,33 @@ pipeline {
         }
 
         stage('Push to ECR') {
-            steps{
+            steps {
                 sh '''
                     aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 199731093942.dkr.ecr.ap-south-1.amazonaws.com
+
                     docker tag student:latest 199731093942.dkr.ecr.ap-south-1.amazonaws.com/student:latest
+
                     docker push 199731093942.dkr.ecr.ap-south-1.amazonaws.com/student:latest
-                    '''
+                '''
             }
         }
 
-       stage('Deployment on Kubernetes') {
+        stage('Deployment on Kubernetes') {
             steps {
-        sh '''
-            aws eks update-kubeconfig --name my-eks-cluster --region ap-south-1
+                sh '''
+                    aws eks update-kubeconfig --name my-eks-cluster --region ap-south-1
 
-            kubectl apply -f k8s/
+                    kubectl apply -f k8s/
 
-            kubectl rollout restart deployment/student
-            kubectl rollout status deployment/student --timeout=180s
+                    kubectl rollout restart deployment/student
 
-            kubectl get pods
-            kubectl get svc -o wide
-        '''
-    }
-}
+                    kubectl rollout status deployment/student --timeout=180s
+
+                    kubectl get pods
+
+                    kubectl get svc -o wide
+                '''
+            }
         }
     }
 }
