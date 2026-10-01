@@ -28,7 +28,7 @@ pipeline {
             }
             post {
                 success {
-                    archiverArtifacts artifacts: '**/target/*.war', fingerprint: true
+                    archiveArtifacts artifacts: '**/target/*.war', fingerprint: true
                 }
             }
         }
