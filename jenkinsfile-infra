@@ -11,7 +11,7 @@ pipeline {
         terraform 'tf'
     }
 
-    steges {
+    stages {
 
         stage('Checkout') {
             steps{
