@@ -74,17 +74,21 @@ pipeline {
             }
         }
 
-        stage('Deployment on Kubernetes') {
+       stage('Deployment on Kubernetes') {
             steps {
-                sh '''
-                    aws eks update-kubeconfig --name my-eks-cluster --region ap-south-1
-                    kubectl apply -f k8s/
-                    kubectl get pods
-                    sleep 30
-                    kubectl get pods
-                    kubectl get svc -o wide
-                '''
-            }
+        sh '''
+            aws eks update-kubeconfig --name my-eks-cluster --region ap-south-1
+
+            kubectl apply -f k8s/
+
+            kubectl rollout restart deployment/student
+            kubectl rollout status deployment/student --timeout=180s
+
+            kubectl get pods
+            kubectl get svc -o wide
+        '''
+    }
+}
         }
     }
 }
