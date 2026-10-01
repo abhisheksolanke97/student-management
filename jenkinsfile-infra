@@ -15,7 +15,8 @@ pipeline {
 
         stage('Checkout') {
             steps{
-                sh 'terraform init'
+                git 'https://github.com/abhisheksolanke97/student-management.git'
+                echo "Clonning is Successful"
             }
         }
 
@@ -26,6 +27,12 @@ pipeline {
         }
 
         stage('Terraform - validate') {
+            steps {
+                sh 'terraform validate'
+            }
+        }
+
+        stage('Terraform - Apply'){
             steps {
                 sh 'terraform apply -auto-approve'
             }
