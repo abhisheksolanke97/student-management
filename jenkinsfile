@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label 'worker'
+        label "worker"
     }
 
     tools {
@@ -13,42 +13,43 @@ pipeline {
 
     stages {
 
-        stage('checkout') {
-            steps {
+        stage('Checkout') {
+            steps{
                 git 'https://github.com/abhisheksolanke97/student-management.git'
-                echo 'Cloning is Successful'
+                echo "Clonning is Successful"
             }
         }
 
         stage('Build') {
             steps {
-                sh 'mvn clean package'
+                sh '''
+                    mvn clean package
+                '''
             }
-
             post {
                 success {
-                    archiveArtifacts artifacts: '**/target/*.war', fingerprint: true
+                    archiverArtifacts artifacts: '**/target/*.war', fingerprint: true
                 }
             }
         }
 
-        stage('Artifacts to s3') {
+        stage('Artifacts to s3'){
             steps {
-                sh 'aws s3 cp target/*.war s3://abhishek54321.space/Artifacts/student-management.war'
+                sh 'aws s3 cp target/student-management.war s3://abhishek54321.space/Artifacts/student.war'
             }
         }
 
-        stage('SonarQube Analysis'){
-            steps{
-                withSonarQubeEnv('sonar'){
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('sonar') {
                     sh 'mvn sonar:sonar'
                 }
             }
         }
 
-        stage('Quality Gate'){
+        stage('Quality Gate') {
             steps {
-                timeout(time: 5, unit: 'MINUTES'){
+                timeout(time: 1, unit: 'MINUTES'){
                     waitForQualityGate abortPipeline: true
                 }
             }
@@ -69,10 +70,21 @@ pipeline {
                     aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 199731093942.dkr.ecr.ap-south-1.amazonaws.com
                     docker tag student:latest 199731093942.dkr.ecr.ap-south-1.amazonaws.com/student:latest
                     docker push 199731093942.dkr.ecr.ap-south-1.amazonaws.com/student:latest
-                '''
+                    '''
             }
         }
 
-
+        stage('Deployment on Kubernetes') {
+            steps {
+                sh '''
+                    aws eks update-kubeconfig --name my-eks-cluster --region ap-south-1
+                    kubectl apply -f k8s/
+                    kubectl get pods
+                    sleep 30
+                    kubectl get pods
+                    kubectl get svc -o wide
+                '''
+            }
+        }
     }
 }
