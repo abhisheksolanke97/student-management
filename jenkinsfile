@@ -79,8 +79,8 @@ pipeline {
                 sh '''
                     aws eks update-kubeconfig --name my-eks-cluster --region ap-south-1
                     kubectl apply -f k8s/
-                    kubectl get pods
-                    sleep 30
+                    kubectl rollout restart deployment/student-deployment
+                    kubectl rollout status deployment/student-deployment --timeout=180s
                     kubectl get pods
                     kubectl get svc -o wide
                 '''
