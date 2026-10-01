@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: student-container
-          image: 199731093942.dkr.ecr.ap-south-1.amazonaws.com/student:latest
+          image: 199731093942.dkr.ecr.ap-south-1.amazonaws.com/student
           ports:
             - containerPort: 8080
 
